@@ -2,9 +2,9 @@ package com.bankofcli.Model;
 
 public class Account {
 
-    public int account_id;
+    public int accountId;
 
-    public int balance;
+    public double balance;
 
     public String pin;
 
@@ -12,23 +12,23 @@ public class Account {
 
     }
 
-    public Account(int account_id, String pin) {
-        this.account_id = account_id;
+    public Account(int accountId, String pin) {
+        this.accountId = accountId;
         this.pin = pin;
     }
 
-    public Account(int account_id, int balance, String pin) {
-        this.account_id = account_id;
+    public Account(int accountId, double balance, String pin) {
+        this.accountId = accountId;
         this.balance = balance;
         this.pin = pin;
     }
 
-    public int getAccount_id() {
-        return account_id;
+    public int getAccountId() {
+        return accountId;
     }
 
-    public void setAccount_id(int account_id) {
-        this.account_id = account_id;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 
     public String getPin() {
@@ -39,17 +39,17 @@ public class Account {
         this.pin = pin;
     }
 
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 
     @Override
     public String toString() {
-        return "Account [account_id=" + account_id + ", balance=" + balance + ", pin=" + pin + "]";
+        return "Account [accountId=" + accountId + ", balance=" + balance + ", pin=" + pin + "]";
     }
 
     

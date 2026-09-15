@@ -6,7 +6,7 @@ public interface AccountDAO {
 
     public void createAccount(Account account);
 
-    public Account getAccountById(int account_id);
+    public Account getAccountById(int accountId);
 
     public void updateAccount(Account account);
 
