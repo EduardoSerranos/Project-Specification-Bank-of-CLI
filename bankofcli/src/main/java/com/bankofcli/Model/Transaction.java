@@ -1,21 +1,23 @@
 package com.bankofcli.Model;
 
+import java.time.LocalDateTime;
+
 public class Transaction {
     private int transactionId;
     private int accountId;
-    private double amount;
     private String transactionType;
-    private int targetAccountId;
+    private double amount;
+    private Integer targetAccountId;
+    private LocalDateTime timestamp;
 
     public Transaction(){
 
     }
 
-    public Transaction(int transactionId, int accountId, double amount, String transactionType, int targetAccountId) {
-        this.transactionId = transactionId;
+    public Transaction(int accountId, String transactionType, double amount, int targetAccountId) {
         this.accountId = accountId;
-        this.amount = amount;
         this.transactionType = transactionType;
+        this.amount = amount;
         this.targetAccountId = targetAccountId;
     }
 
@@ -47,16 +49,24 @@ public class Transaction {
         return transactionType;
     }
 
-    public void getTransactionType(String transactionType){
+    public void setTransactionType(String transactionType){
         this.transactionType = transactionType;
     }
 
-    public int getTargetAccountId() {
+    public Integer getTargetAccountId() {
         return targetAccountId;
     }
 
     public void setTargetAccountId(int targetAccountId){
         this.targetAccountId = targetAccountId;
+    }
+
+    public LocalDateTime getTimestamp(){
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp){
+        this.timestamp = timestamp;
     }
 
 }
