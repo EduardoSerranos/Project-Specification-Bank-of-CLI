@@ -12,17 +12,17 @@ import com.bankofcli.Model.Transaction;
 public class TransactionDAOImpl implements TransactionDAO {
 
     private static final String CREATE_TABLE_SQL = """
-            CREATE TABLE IF NOT EXISTS transaction (
+            CREATE TABLE IF NOT EXISTS transactions (
                 transaction_id SERIAL PRIMARY KEY,
                 accountId INTEGER NOT NULL REFERENCES account(AccountID),
                 type VARCHAR(20) NOT NULL,
                 amount NUMERIC(12, 2) NOT NULL,
-                targetAccountId INTEGER REFERENCES account(accountId),
+                targetAccountId INTEGER REFERENCES accounts(accountId),
                 timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);
             """;
 
-    private static final String CREATE_TRANSACTION_SQL = "INSERT INTO transaction (accountId, type, amount, targetAccountId) VALUES (?, ?, ?, ?)";
-    private static final String FIND_TRANSACTION_SQL = "SELECT * FROM transaction WHERE transactionId = ? ORDERED BY timestamp DESC";
+    private static final String CREATE_TRANSACTION_SQL = "INSERT INTO transactions (accountId, type, amount, targetAccountId) VALUES (?, ?, ?, ?)";
+    private static final String FIND_TRANSACTION_SQL = "SELECT * FROM transactions WHERE accountId = ? ORDER BY timestamp DESC";
 
 
 
@@ -74,8 +74,9 @@ public class TransactionDAOImpl implements TransactionDAO {
                 }
                 transaction.setTimestamp(resultSet.getTimestamp("timestamp").toLocalDateTime());
                 transactions.add(transaction);
-
             }
+
+            return transactions;
 
 
         } catch (SQLException e) {

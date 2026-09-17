@@ -14,7 +14,7 @@ public class Transaction {
 
     }
 
-    public Transaction(int accountId, String transactionType, double amount, int targetAccountId) {
+    public Transaction(int accountId, String transactionType, double amount, Integer targetAccountId) {
         this.accountId = accountId;
         this.transactionType = transactionType;
         this.amount = amount;
@@ -57,7 +57,7 @@ public class Transaction {
         return targetAccountId;
     }
 
-    public void setTargetAccountId(int targetAccountId){
+    public void setTargetAccountId(Integer targetAccountId){
         this.targetAccountId = targetAccountId;
     }
 
