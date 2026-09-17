@@ -1,12 +1,13 @@
 package com.bankofcli.Model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Transaction {
     private int transactionId;
     private int accountId;
     private String transactionType;
-    private double amount;
+    private BigDecimal amount;
     private Integer targetAccountId;
     private LocalDateTime timestamp;
 
@@ -14,7 +15,7 @@ public class Transaction {
 
     }
 
-    public Transaction(int accountId, String transactionType, double amount, Integer targetAccountId) {
+    public Transaction(int accountId, String transactionType, BigDecimal amount, Integer targetAccountId) {
         this.accountId = accountId;
         this.transactionType = transactionType;
         this.amount = amount;
@@ -37,11 +38,11 @@ public class Transaction {
         this.accountId = accountId;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

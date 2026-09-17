@@ -1,5 +1,9 @@
 package com.bankofcli.Service;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.logging.Logger;
+
 import com.bankofcli.Model.Account;
 import com.bankofcli.Model.Transaction;
 import com.bankofcli.Persistence.AccountDAO;
@@ -8,8 +12,8 @@ import com.bankofcli.Persistence.TransactionDAO;
 public class AccountServiceImpl implements AccountService{
 
     private AccountDAO accountDAO;
-
     private TransactionDAO transactionDAO;
+    private static final Logger logger = Logger.getLogger(AccountServiceImpl.class.getName());
 
     public AccountServiceImpl(AccountDAO accountDAO, TransactionDAO transactionDAO){
 
@@ -37,7 +41,7 @@ public class AccountServiceImpl implements AccountService{
     }
     
     @Override
-    public double checkBalance(int accountId){
+    public BigDecimal checkBalance(int accountId){
         Account account = accountDAO.getAccountById(accountId);
 
         if (account == null){
@@ -48,31 +52,31 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public void deposit(int accountId, double amount){
+    public void deposit(int accountId, BigDecimal amount){
         Account account = accountDAO.getAccountById(accountId);
-        if (amount <= 0 || account == null){
+        if (amount.compareTo(BigDecimal.ZERO) <= 0 || account == null){
             throw new IllegalArgumentException("Must have an account and/or amount must be greater than 0");
         }
 
-        account.setBalance(account.getBalance() + amount);
+        account.setBalance(account.getBalance().add(amount));
         accountDAO.updateAccount(account);
         Transaction transaction = new Transaction(accountId, "DEPOSIT", amount, null);
         transactionDAO.createTransaction(transaction);
     }
 
     @Override
-    public void withdraw(int accountId, double amount){
+    public void withdraw(int accountId, BigDecimal amount){
         Account account = accountDAO.getAccountById(accountId);
 
-        if (account == null || amount <=0){
+        if (account == null || amount.compareTo(BigDecimal.ZERO) <= 0){
             throw new IllegalArgumentException("Must have an account and/or amount must be greater than 0");
         }
         
-        if (account.getBalance() < amount){
+        if (account.getBalance().compareTo(amount) <= 0){
             throw new IllegalArgumentException("Insufficient funds");
         }
         
-        account.setBalance(account.getBalance() - amount);
+        account.setBalance(account.getBalance().subtract(amount));
         accountDAO.updateAccount(account);
         Transaction transaction = new Transaction(accountId, "WITHDRAW", amount, null);
         transactionDAO.createTransaction(transaction);
@@ -80,15 +84,15 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public void transfer(int senderId, int receiverId, double amount){
+    public void transfer(int senderId, int receiverId, BigDecimal amount){
         Account sender = accountDAO.getAccountById(senderId);
         Account receiver = accountDAO.getAccountById(receiverId);
 
-        if (sender == null || receiver == null || amount <= 0){
+        if (sender == null || receiver == null || amount.compareTo(BigDecimal.ZERO) <= 0){
             throw new IllegalArgumentException("Unable to transfer");
         }
 
-        if (amount < sender.getBalance() ){
+        if (amount.compareTo(sender.getBalance()) > 0 ){
             throw new IllegalArgumentException("Insufficient funds");
         }
 
@@ -96,8 +100,8 @@ public class AccountServiceImpl implements AccountService{
             throw new IllegalArgumentException("Cannot transfer to the same account");
         }
 
-        sender.setBalance(sender.getBalance() - amount);
-        receiver.setBalance(receiver.getBalance() + amount);
+        sender.setBalance(sender.getBalance().subtract(amount));
+        receiver.setBalance(receiver.getBalance().add(amount));
 
         accountDAO.transfer(sender, receiver);
 
@@ -106,12 +110,16 @@ public class AccountServiceImpl implements AccountService{
 
         transactionDAO.createTransaction(transaction);
         transactionDAO.createTransaction(transaction2);
-
-
     }
 
+    @Override
+    public List<Transaction> getTransactionHistory(int accountId){
+        Account account = accountDAO.getAccountById(accountId);
 
-
-
+        if(account == null){
+            throw new IllegalArgumentException("Account not found");
+        }
+        return transactionDAO.getTransactionByAccountId(accountId);
+    }
 
 }   

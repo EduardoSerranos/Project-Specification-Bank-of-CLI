@@ -1,5 +1,6 @@
 package com.bankofcli.Persistence;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -34,7 +35,7 @@ public class AccountDAOImpl implements AccountDAO {
             PreparedStatement statement = connection.prepareStatement(INSERT_SQL)) {
             statement.setInt(1, account.getAccountId());
             statement.setString(2, account.getPin());
-            statement.setDouble(3, account.getBalance());
+            statement.setBigDecimal(3, account.getBalance());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error creating account: ", e);
@@ -51,7 +52,7 @@ public class AccountDAOImpl implements AccountDAO {
             if(resultSet.next()) {
                 int id = resultSet.getInt("accountId");
                 String pin = resultSet.getString("pin");
-                double balance = resultSet.getDouble("balance");
+                BigDecimal balance = resultSet.getBigDecimal("balance");
                 return new Account(id, balance, pin);
             } else {
                 return null;
@@ -67,7 +68,7 @@ public class AccountDAOImpl implements AccountDAO {
         try(Connection connection = ConnectionFactory.getConnectionFactory().getConnection();
             PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
             statement.setString(1, account.getPin());
-            statement.setDouble(2, account.getBalance());
+            statement.setBigDecimal(2, account.getBalance());
             statement.setInt(3, account.getAccountId());
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -94,11 +95,11 @@ public class AccountDAOImpl implements AccountDAO {
             connection.setAutoCommit(false);
 
             try{
-                statement.setDouble(1, sender.getBalance());
+                statement.setBigDecimal(1, sender.getBalance());
                 statement.setInt(2, sender.getAccountId());
                 statement.executeUpdate();
             
-                statement.setDouble(1, receiver.getBalance());
+                statement.setBigDecimal(1, receiver.getBalance());
                 statement.setInt(2, receiver.getAccountId());
                 statement.executeUpdate();
 

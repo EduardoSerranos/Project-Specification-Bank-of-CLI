@@ -1,12 +1,12 @@
 package com.bankofcli.Model;
 
+import java.math.BigDecimal;
+
 public class Account {
 
-    public int accountId;
-
-    public double balance;
-
-    public String pin;
+    private int accountId;
+    private BigDecimal balance;
+    private String pin;
 
     public Account(){
 
@@ -15,9 +15,11 @@ public class Account {
     public Account(int accountId, String pin) {
         this.accountId = accountId;
         this.pin = pin;
+        //Otherwise balance starts as null
+        this.balance = BigDecimal.ZERO;
     }
 
-    public Account(int accountId, double balance, String pin) {
+    public Account(int accountId, BigDecimal balance, String pin) {
         this.accountId = accountId;
         this.balance = balance;
         this.pin = pin;
@@ -39,19 +41,16 @@ public class Account {
         this.pin = pin;
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 
     @Override
     public String toString() {
-        return "Account [accountId=" + accountId + ", balance=" + balance + ", pin=" + pin + "]";
+        return "Account [accountId= " + accountId + ", balance= " + balance + " ]";
     }
-
-    
-
 }

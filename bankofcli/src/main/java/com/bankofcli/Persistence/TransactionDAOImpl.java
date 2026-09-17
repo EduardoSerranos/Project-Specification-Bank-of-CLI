@@ -13,8 +13,8 @@ public class TransactionDAOImpl implements TransactionDAO {
 
     private static final String CREATE_TABLE_SQL = """
             CREATE TABLE IF NOT EXISTS transactions (
-                transaction_id SERIAL PRIMARY KEY,
-                accountId INTEGER NOT NULL REFERENCES account(AccountID),
+                transactionId SERIAL PRIMARY KEY,
+                accountId INTEGER NOT NULL REFERENCES accounts(AccountID),
                 type VARCHAR(20) NOT NULL,
                 amount NUMERIC(12, 2) NOT NULL,
                 targetAccountId INTEGER REFERENCES accounts(accountId),
@@ -38,7 +38,7 @@ public class TransactionDAOImpl implements TransactionDAO {
 
             statement.setInt(1, transaction.getAccountId());
             statement.setString(2, transaction.getTransactionType());
-            statement.setDouble(3, transaction.getAmount());
+            statement.setBigDecimal(3, transaction.getAmount());
 
             if (transaction.getTargetAccountId() != null){
                 statement.setInt(4, transaction.getTargetAccountId());
@@ -67,7 +67,7 @@ public class TransactionDAOImpl implements TransactionDAO {
                 transaction.setTransactionId(resultSet.getInt("transactionId"));
                 transaction.setAccountId(resultSet.getInt("accountId"));
                 transaction.setTransactionType(resultSet.getString("type"));
-                transaction.setAmount(resultSet.getDouble("amount"));
+                transaction.setAmount(resultSet.getBigDecimal("amount"));
                 int targetAccountId = resultSet.getInt("targetAccountId");
                 if (!resultSet.wasNull()){
                     transaction.setTargetAccountId(targetAccountId);
