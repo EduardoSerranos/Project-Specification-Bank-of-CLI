@@ -20,6 +20,7 @@ public class AccountDAOImpl implements AccountDAO {
     private static final String FIND_BY_ID_SQL = "SELECT * FROM accounts WHERE accountId = ?";
     private static final String UPDATE_SQL = "UPDATE accounts SET pin = ?, balance = ? WHERE accountId = ?";
     private static final String DELETE_SQL = "DELETE FROM accounts WHERE accountId = ?";
+    private static final String TRANSFER_SQL ="UPDATE accounts SET balance = ? WHERE accountId = ?";
 
     
     public AccountDAOImpl(){
@@ -36,7 +37,7 @@ public class AccountDAOImpl implements AccountDAO {
             statement.setDouble(3, account.getBalance());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Error creating account", e);
+            throw new RuntimeException("Error creating account: ", e);
         }
     }
 
@@ -57,7 +58,7 @@ public class AccountDAOImpl implements AccountDAO {
             }
 
         } catch(SQLException e) {
-            throw new RuntimeException("Error retrieving account", e);
+            throw new RuntimeException("Error retrieving account: ", e);
         }
     }
 
@@ -70,7 +71,7 @@ public class AccountDAOImpl implements AccountDAO {
             statement.setInt(3, account.getAccountId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Error updating account", e);
+            throw new RuntimeException("Error updating account: ", e);
         }
     }
 
@@ -81,7 +82,35 @@ public class AccountDAOImpl implements AccountDAO {
             statement.setInt(1, account.getAccountId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Error deleting account", e);
+            throw new RuntimeException("Error deleting account: ", e);
+        }
+    }
+
+    @Override
+    public void transfer(Account sender, Account receiver){
+        try(Connection connection = ConnectionFactory.getConnectionFactory().getConnection();
+            PreparedStatement statement = connection.prepareStatement(TRANSFER_SQL)) {
+            
+            connection.setAutoCommit(false);
+
+            try{
+                statement.setDouble(1, sender.getBalance());
+                statement.setInt(2, sender.getAccountId());
+                statement.executeUpdate();
+            
+                statement.setDouble(1, receiver.getBalance());
+                statement.setInt(2, receiver.getAccountId());
+                statement.executeUpdate();
+
+                connection.commit();
+
+            } catch(SQLException e){
+                connection.rollback();
+                throw e;
+            }
+            
+        } catch (SQLException e) {
+            throw new RuntimeException("Error transfering: ", e);
         }
     }
 
@@ -91,7 +120,7 @@ public class AccountDAOImpl implements AccountDAO {
             statement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error initializing database schema", e);
+            throw new RuntimeException("Error initializing database schema: ", e);
         }
     }
 

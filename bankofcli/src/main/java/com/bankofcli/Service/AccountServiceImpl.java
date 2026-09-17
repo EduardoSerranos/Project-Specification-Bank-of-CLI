@@ -61,23 +61,52 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public void withdraw(int accountId, double Damount){
+    public void withdraw(int accountId, double amount){
         Account account = accountDAO.getAccountById(accountId);
 
-        if (account == null || Damount <=0){
+        if (account == null || amount <=0){
             throw new IllegalArgumentException("Must have an account and/or amount must be greater than 0");
         }
         
-        if (account.getBalance() < Damount){
+        if (account.getBalance() < amount){
             throw new IllegalArgumentException("Insufficient funds");
         }
-
-
+        
+        account.setBalance(account.getBalance() - amount);
+        accountDAO.updateAccount(account);
+        Transaction transaction = new Transaction(accountId, "WITHDRAW", amount, null);
+        transactionDAO.createTransaction(transaction);
 
     }
 
     @Override
     public void transfer(int senderId, int receiverId, double amount){
+        Account sender = accountDAO.getAccountById(senderId);
+        Account receiver = accountDAO.getAccountById(receiverId);
+
+        if (sender == null || receiver == null || amount <= 0){
+            throw new IllegalArgumentException("Unable to transfer");
+        }
+
+        if (amount < sender.getBalance() ){
+            throw new IllegalArgumentException("Insufficient funds");
+        }
+
+        if(senderId == receiverId){
+            throw new IllegalArgumentException("Cannot transfer to the same account");
+        }
+
+        sender.setBalance(sender.getBalance() - amount);
+        receiver.setBalance(receiver.getBalance() + amount);
+
+        accountDAO.transfer(sender, receiver);
+
+        Transaction transaction = new Transaction(senderId, "TRANSFER", amount, receiverId);
+        Transaction transaction2 = new Transaction(receiverId, "TRANSFER", amount, senderId);
+
+        transactionDAO.createTransaction(transaction);
+        transactionDAO.createTransaction(transaction2);
+
 
     }
 

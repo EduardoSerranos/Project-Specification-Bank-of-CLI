@@ -12,4 +12,6 @@ public interface AccountDAO {
 
     public void deleteAccount(Account account);
 
+    public void transfer(Account sender, Account receiver);
+
 }
