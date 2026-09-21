@@ -22,7 +22,6 @@ public class AccountDAOImpl implements AccountDAO {
     private static final String UPDATE_SQL = "UPDATE accounts SET pin = ?, balance = ? WHERE accountId = ?";
     private static final String DELETE_SQL = "DELETE FROM accounts WHERE accountId = ?";
     private static final String TRANSFER_SQL ="UPDATE accounts SET balance = ? WHERE accountId = ?";
-
     
     public AccountDAOImpl(){
         InitializeSchema();
