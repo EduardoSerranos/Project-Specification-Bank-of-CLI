@@ -1,8 +1,11 @@
 package com.bankofcli.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import com.bankofcli.Model.Account;
 import com.bankofcli.Model.Transaction;
@@ -16,9 +19,16 @@ public class AccountServiceImpl implements AccountService{
     private static final Logger logger = Logger.getLogger(AccountServiceImpl.class.getName());
 
     public AccountServiceImpl(AccountDAO accountDAO, TransactionDAO transactionDAO){
-
         this.accountDAO = accountDAO;
         this.transactionDAO = transactionDAO;
+
+        try{
+            FileHandler fileHandler = new FileHandler("logs/bank.log", true);
+            fileHandler.setFormatter(new SimpleFormatter());
+            logger.addHandler(fileHandler);
+        } catch(IOException e){
+            System.out.println("Unable to create file.");
+        }
     }
 
     @Override
