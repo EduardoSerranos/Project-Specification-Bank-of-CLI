@@ -34,12 +34,12 @@ public class AccountServiceImpl implements AccountService{
     @Override
     public void createAccount(Account account){
         if (account == null || accountDAO.getAccountById(account.getAccountId()) != null){
-            logger.warning("Failed to create account for " + account.getAccountId());
+            logger.warning(() -> "Failed to create account");
             throw new IllegalArgumentException("Invalid account");
         }
 
         accountDAO.createAccount(account);
-        logger.info("Account " + account.getAccountId() + " created successfully.");
+        logger.info(() -> "Account " + account.getAccountId() + " created successfully.");
     }
 
     @Override
@@ -47,10 +47,10 @@ public class AccountServiceImpl implements AccountService{
         Account account = accountDAO.getAccountById(accountId);
 
         if(account == null || !account.getPin().equals(pin)){
-            logger.warning("Failed to login for account " + accountId);
+            logger.warning(() -> "Failed to login for account " + accountId);
             throw new IllegalArgumentException("Invalid credentials");
         }
-        logger.info("Account " + accountId + " logged in successfully.");
+        logger.info(() -> "Account " + accountId + " logged in successfully.");
         return account;
     }
     
@@ -59,7 +59,7 @@ public class AccountServiceImpl implements AccountService{
         Account account = accountDAO.getAccountById(accountId);
 
         if (account == null){
-            logger.warning("Account was not found " + accountId);
+            logger.warning(() -> "Account was not found " + accountId);
             throw new IllegalArgumentException("Account not found");
         }
 
@@ -70,7 +70,7 @@ public class AccountServiceImpl implements AccountService{
     public void deposit(int accountId, BigDecimal amount){
         Account account = accountDAO.getAccountById(accountId);
         if (amount.compareTo(BigDecimal.ZERO) <= 0 || account == null){
-            logger.warning("Insufficient funnds for " + accountId);
+            logger.warning(() -> "Insufficient funnds for " + accountId);
             throw new IllegalArgumentException("Must have an account and/or amount must be greater than 0");
         }
 
@@ -79,7 +79,7 @@ public class AccountServiceImpl implements AccountService{
         Transaction transaction = new Transaction(accountId, "DEPOSIT", amount, null);
         transactionDAO.createTransaction(transaction);
 
-        logger.info("Account " + account.getAccountId() + "deposited $" + amount);
+        logger.info(() -> "Account " + account.getAccountId() + "deposited $" + amount);
     }
 
     @Override
@@ -87,12 +87,12 @@ public class AccountServiceImpl implements AccountService{
         Account account = accountDAO.getAccountById(accountId);
 
         if (account == null || amount.compareTo(BigDecimal.ZERO) <= 0){
-            logger.warning("Failed to withdraw from account " + accountId);
+            logger.warning(() -> "Failed to withdraw from account " + accountId);
             throw new IllegalArgumentException("Must have an account and/or amount must be greater than 0");
         }
         
         if (account.getBalance().compareTo(amount) <= 0){
-            logger.warning("Failed to withdraw from account " + accountId);
+            logger.warning(() -> "Failed to withdraw from account " + accountId);
             throw new IllegalArgumentException("Insufficient funds");
         }
         
@@ -101,7 +101,7 @@ public class AccountServiceImpl implements AccountService{
         Transaction transaction = new Transaction(accountId, "WITHDRAW", amount, null);
         transactionDAO.createTransaction(transaction);
 
-        logger.info("Account " + account.getAccountId() + "wtihdrew $" + amount);
+        logger.info(() -> "Account " + account.getAccountId() + "wtihdrew $" + amount);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class AccountServiceImpl implements AccountService{
         Account receiver = accountDAO.getAccountById(receiverId);
 
         if (sender == null || receiver == null || amount.compareTo(BigDecimal.ZERO) <= 0){
-            logger.warning("Unable to transfer to " + senderId);
+            logger.warning(() -> "Unable to transfer to " + senderId);
             throw new IllegalArgumentException("Unable to transfer");
         }
 
@@ -135,7 +135,7 @@ public class AccountServiceImpl implements AccountService{
         transactionDAO.createTransaction(transaction);
         transactionDAO.createTransaction(transaction2);
 
-        logger.info("Account " + senderId + " transfered $" + amount + " to Account " + receiverId);
+        logger.info(() -> "Account " + senderId + " transfered $" + amount + " to Account " + receiverId);
     }
 
     @Override
@@ -143,7 +143,7 @@ public class AccountServiceImpl implements AccountService{
         Account account = accountDAO.getAccountById(accountId);
 
         if(account == null){
-            logger.warning("Account not found: " + accountId);
+            logger.warning(() -> "Account not found: " + accountId);
             throw new IllegalArgumentException("Account not found");
         }
         return transactionDAO.getTransactionByAccountId(accountId);
