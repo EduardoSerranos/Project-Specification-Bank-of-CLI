@@ -1,10 +1,10 @@
 package com.bankofcli.api;
 
+import com.bankofcli.Persistence.AccountDAO;
+import com.bankofcli.Persistence.AccountDAOImpl;
 import com.bankofcli.Persistence.TransactionDAO;
 import com.bankofcli.Persistence.TransactionDAOImpl;
 import com.bankofcli.Service.AccountService;
-import com.bankofcli.Persistence.AccountDAO;
-import com.bankofcli.Persistence.AccountDAOImpl;
 import com.bankofcli.Service.AccountServiceImpl;
 
 public class BankApp {
@@ -16,7 +16,6 @@ public class BankApp {
         AccountService service = new AccountServiceImpl(accountDAO, transactionDAO);
 
         new BankRepl(service).run();
-
         
     }
 }

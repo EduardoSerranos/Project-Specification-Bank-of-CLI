@@ -19,6 +19,8 @@ public class BankRepl {
     }
 
     public void run(){
+        printHelp();
+
         while(true){
             System.out.println(">");
             String command = scanner.nextLine().trim();
@@ -74,6 +76,8 @@ public class BankRepl {
     }
 
     public void loggedInMenu(){
+        printLoggedInHelp();
+        
         while(currentAccount != null){
             System.out.println(">");
             String command = scanner.nextLine().trim();
@@ -144,5 +148,15 @@ public class BankRepl {
         System.out.println("help - Show this message again");
         System.out.println("exit - Exit the application");
 
+    }
+
+    public void printLoggedInHelp(){
+        System.out.println("Available commands: ");
+        System.out.println("balance - Check your balance");
+        System.out.println("deposit - Deposit money");
+        System.out.println("withdraw - Withdraw money");
+        System.out.println("transfer - Transfer money");
+        System.out.println("history - View transaction history");
+        System.out.println("logout - Logout");
     }
 }
