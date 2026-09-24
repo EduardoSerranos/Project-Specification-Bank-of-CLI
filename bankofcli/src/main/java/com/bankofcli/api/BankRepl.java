@@ -21,7 +21,7 @@ public class BankRepl {
     public void run(){
         printHelp();
 
-        while(true){
+        while(scanner.hasNextLine()){
             System.out.println(">");
             String command = scanner.nextLine().trim();
 
@@ -57,7 +57,7 @@ public class BankRepl {
 
         service.createAccount(account);
 
-        System.out.println("Account created successfully.");
+        printSuccess("Account created successfully.");
     }
 
     public void login(){
@@ -69,7 +69,7 @@ public class BankRepl {
 
         currentAccount = service.login(accountId, pin);
 
-        System.out.println("Login successful.");
+        printSuccess("Login successful.");
 
         loggedInMenu();
 
@@ -79,84 +79,137 @@ public class BankRepl {
         printLoggedInHelp();
         
         while(currentAccount != null){
+
             System.out.println(">");
             String command = scanner.nextLine().trim();
 
-            switch(command){
-                case "balance" -> checkBalance();
-                case "deposit" -> deposit();
-                case "withdraw" -> withdraw();
-                case "transfer" -> transfer();
-                case "history" -> history();
-                case "logout" -> logout();
-                default -> System.out.println("Unknown command");
+            try {
+                switch(command){
+                    case "balance" -> checkBalance();
+                    case "deposit" -> deposit();
+                    case "withdraw" -> withdraw();
+                    case "transfer" -> transfer();
+                    case "history" -> history();
+                    case "logout" -> logout();
+                    default -> System.out.println("Unknown command");
+                }
+                
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
             }
+            
         }
     }
 
     public void checkBalance(){
         BigDecimal balance = service.checkBalance(currentAccount.getAccountId());
-        System.out.println("Current balance: $" + balance);
+        System.out.println("----------------------------------------");
+        System.out.println("Current Balance: $" + balance);
+        System.out.println("----------------------------------------");
     }
     
-    public void deposit(){
-        System.out.println("Amount to deposit: ");
-        BigDecimal amount = new BigDecimal(scanner.nextLine().trim());
-        service.deposit(currentAccount.getAccountId(), amount);
-        System.out.println("Deposit successful.");
+    public void deposit() { 
+        System.out.println(); 
+        System.out.println(" ┌────────────────────────────────────────┐"); 
+        System.out.println(" │ DEPOSIT MONEY │"); 
+        System.out.println(" └────────────────────────────────────────┘"); 
+        System.out.print(" Amount to deposit: $"); 
+        BigDecimal amount = new BigDecimal(scanner.nextLine().trim()); 
+        service.deposit(currentAccount.getAccountId(), amount); 
+        System.out.println(); 
+        printSuccess("Deposit successful."); 
     }
 
-    public void withdraw(){
-        System.out.println("Amount to withdraw: ");
-        BigDecimal amount = new BigDecimal(scanner.nextLine().trim());
-        service.withdraw(currentAccount.getAccountId(), amount);
-        System.out.println("Withdrawal successful.");
+    public void withdraw() { 
+        System.out.println(); 
+        System.out.println(" ┌────────────────────────────────────────┐"); 
+        System.out.println(" │ WITHDRAW MONEY │"); 
+        System.out.println(" └────────────────────────────────────────┘"); 
+        System.out.print(" Amount to withdraw: $"); 
+        BigDecimal amount = new BigDecimal(scanner.nextLine().trim()); 
+        service.withdraw(currentAccount.getAccountId(), amount); 
+        System.out.println(); 
+        printSuccess("Withdrawal successful."); 
     }
 
-    public void transfer(){
-        System.out.println("Target Account ID: ");
-        int receiverId = Integer.parseInt(scanner.nextLine().trim());
-
-        System.out.println("Amount to transfer: ");
-        BigDecimal amount = new BigDecimal(scanner.nextLine().trim());
-
-        service.transfer(currentAccount.getAccountId(), receiverId, amount);
-        System.out.println("Transfer successful.");
+    public void transfer() { 
+        System.out.println(); 
+        System.out.println(" ┌────────────────────────────────────────┐"); 
+        System.out.println(" │ TRANSFER MONEY │"); 
+        System.out.println(" └────────────────────────────────────────┘"); 
+        System.out.print(" Target Account ID: "); 
+        int receiverId = Integer.parseInt(scanner.nextLine().trim()); 
+        System.out.print(" Amount to transfer: $"); 
+        BigDecimal amount = new BigDecimal(scanner.nextLine().trim()); 
+        service.transfer( currentAccount.getAccountId(), receiverId, amount ); 
+        System.out.println(); 
+        printSuccess("Transfer successful."); 
     }
 
-    public void history(){
-        List<Transaction> transactions = service.getTransactionHistory(currentAccount.getAccountId());
-        if (transactions.isEmpty()){
-            System.out.println("No transaction found.");
-            //Has to be return because is normal to not have a transaction.
-            return;
-        }
-        for(Transaction transaction : transactions){
-            System.out.println(transaction.getTimestamp() + " | " + transaction.getTransactionType() + " | $" + transaction.getAmount());
-        }
+    public void history() { 
+        List<Transaction> transactions = service.getTransactionHistory( currentAccount.getAccountId() ); 
+        System.out.println(); 
+        System.out.println(" ┌──────────────────────────────────────────────────────┐"); 
+        System.out.println(" │ TRANSACTION HISTORY │"); 
+        System.out.println(" └──────────────────────────────────────────────────────┘"); 
+        if (transactions.isEmpty()) { 
+            System.out.println(); 
+            System.out.println(" No transactions found."); 
+            return; 
+        } 
+        System.out.println();
+        System.out.println(" DATE/TIME TYPE AMOUNT"); 
+        System.out.println(" ------------------------------------------------------"); 
+        for (Transaction transaction : transactions) { 
+            System.out.printf( " %-24s %-16s $%s%n", transaction.getTimestamp(), transaction.getTransactionType(), transaction.getAmount() ); 
+        } 
+        System.out.println( " ------------------------------------------------------" ); 
     }
 
-    public void logout(){
-        currentAccount = null;
-        System.out.println("Logged out successfully.");
+    public void logout() { 
+        currentAccount = null; 
+        System.out.println(); 
+        printSuccess("Logged out successfully."); 
+        System.out.println(); 
+        printHelp();    
     }
 
-    public void printHelp(){
-        System.out.println("Available commands: ");
-        System.out.println("register - Register an account");
-        System.out.println("login - Login to an account");
-        System.out.println("help - Show this message again");
-        System.out.println("exit - Exit the application");
-
+    public void printHelp() {
+        printHeader();
+        System.out.println();
+        System.out.println("Available Commands");
+        System.out.println("----------------------------------------");
+        System.out.println(" register  - Create a new account");
+        System.out.println(" login     - Login to your account");
+        System.out.println(" help      - Show available commands");
+        System.out.println(" exit      - Exit the application");
+        System.out.println("----------------------------------------");
     }
 
-    public void printLoggedInHelp(){
-        System.out.println("Available commands: ");
-        System.out.println("balance - Check your balance");
-        System.out.println("deposit - Deposit money");
-        System.out.println("withdraw - Withdraw money");
-        System.out.println("transfer - Transfer money");
-        System.out.println("history - View transaction history");
-        System.out.println("logout - Logout");
+    public void printLoggedInHelp() {
+        printHeader();
+
+        System.out.println("Account: " + currentAccount.getAccountId());
+        System.out.println();
+        System.out.println("Account Menu");
+        System.out.println("----------------------------------------");
+        System.out.println(" balance   - Check account balance");
+        System.out.println(" deposit   - Deposit money");
+        System.out.println(" withdraw  - Withdraw money");
+        System.out.println(" transfer  - Transfer money");
+        System.out.println(" history   - View transactions");
+        System.out.println(" logout    - Logout");
+        System.out.println("----------------------------------------");
+    }
+
+    public void printHeader() {
+        System.out.println("========================================");
+        System.out.println("           BANK OF CLI");
+        System.out.println("        Terminal Banking");
+        System.out.println("========================================");
+    }
+
+    public void printSuccess(String message) { 
+        System.out.println(" ✓ " + message); 
     }
 }

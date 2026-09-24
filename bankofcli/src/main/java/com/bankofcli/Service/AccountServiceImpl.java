@@ -23,7 +23,7 @@ public class AccountServiceImpl implements AccountService{
         this.transactionDAO = transactionDAO;
 
         try{
-            FileHandler fileHandler = new FileHandler("logs/bank.log", true);
+            FileHandler fileHandler = new FileHandler("logs/bank.log", false);
             fileHandler.setFormatter(new SimpleFormatter());
             logger.addHandler(fileHandler);
         } catch(IOException e){
@@ -91,7 +91,7 @@ public class AccountServiceImpl implements AccountService{
             throw new IllegalArgumentException("Must have an account and/or amount must be greater than 0");
         }
         
-        if (account.getBalance().compareTo(amount) <= 0){
+        if (account.getBalance().compareTo(amount) < 0){
             logger.warning(() -> "Failed to withdraw from account " + accountId);
             throw new IllegalArgumentException("Insufficient funds");
         }
