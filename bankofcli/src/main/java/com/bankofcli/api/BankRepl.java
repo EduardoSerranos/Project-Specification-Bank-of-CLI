@@ -39,9 +39,10 @@ public class BankRepl {
 
     public void handle(String command){
         switch(command){
-            case "register" -> register();
-            case "login" -> login();
-            case "help" -> printHelp();
+            case "1" -> register();
+            case "2" -> login();
+            case "3" -> printHelp();
+            case "4" -> logout();
             default -> System.out.println("Unknown command");
         }
     }
@@ -58,6 +59,8 @@ public class BankRepl {
         service.createAccount(account);
 
         printSuccess("Account created successfully.");
+
+        printHelp();
     }
 
     public void login(){
@@ -72,7 +75,6 @@ public class BankRepl {
         printSuccess("Login successful.");
 
         loggedInMenu();
-
     }
 
     public void loggedInMenu(){
@@ -85,12 +87,12 @@ public class BankRepl {
 
             try {
                 switch(command){
-                    case "balance" -> checkBalance();
-                    case "deposit" -> deposit();
-                    case "withdraw" -> withdraw();
-                    case "transfer" -> transfer();
-                    case "history" -> history();
-                    case "logout" -> logout();
+                    case "1" -> checkBalance();
+                    case "2" -> deposit();
+                    case "3" -> withdraw();
+                    case "4" -> transfer();
+                    case "5" -> history();
+                    case "6" -> logout();
                     default -> System.out.println("Unknown command");
                 }
                 
@@ -117,7 +119,8 @@ public class BankRepl {
         BigDecimal amount = new BigDecimal(scanner.nextLine().trim()); 
         service.deposit(currentAccount.getAccountId(), amount); 
         System.out.println(); 
-        printSuccess("Deposit successful."); 
+        printSuccess("Deposit successful.");
+        loggedInMenu(); 
     }
 
     public void withdraw() { 
@@ -129,7 +132,8 @@ public class BankRepl {
         BigDecimal amount = new BigDecimal(scanner.nextLine().trim()); 
         service.withdraw(currentAccount.getAccountId(), amount); 
         System.out.println(); 
-        printSuccess("Withdrawal successful."); 
+        printSuccess("Withdrawal successful.");
+        loggedInMenu(); 
     }
 
     public void transfer() { 
@@ -143,7 +147,8 @@ public class BankRepl {
         BigDecimal amount = new BigDecimal(scanner.nextLine().trim()); 
         service.transfer( currentAccount.getAccountId(), receiverId, amount ); 
         System.out.println(); 
-        printSuccess("Transfer successful."); 
+        printSuccess("Transfer successful.");
+        loggedInMenu();
     }
 
     public void history() { 
@@ -163,7 +168,8 @@ public class BankRepl {
         for (Transaction transaction : transactions) { 
             System.out.printf( " %-24s %-16s $%s%n", transaction.getTimestamp(), transaction.getTransactionType(), transaction.getAmount() ); 
         } 
-        System.out.println( " ------------------------------------------------------" ); 
+        System.out.println( " ------------------------------------------------------" );
+        loggedInMenu(); 
     }
 
     public void logout() { 
@@ -179,10 +185,10 @@ public class BankRepl {
         System.out.println();
         System.out.println("Available Commands");
         System.out.println("----------------------------------------");
-        System.out.println(" register  - Create a new account");
-        System.out.println(" login     - Login to your account");
-        System.out.println(" help      - Show available commands");
-        System.out.println(" exit      - Exit the application");
+        System.out.println(" 1. register  - Create a new account");
+        System.out.println(" 2. login     - Login to your account");
+        System.out.println(" 3. help      - Show available commands");
+        System.out.println(" 4. exit      - Exit the application");
         System.out.println("----------------------------------------");
     }
 
@@ -193,12 +199,12 @@ public class BankRepl {
         System.out.println();
         System.out.println("Account Menu");
         System.out.println("----------------------------------------");
-        System.out.println(" balance   - Check account balance");
-        System.out.println(" deposit   - Deposit money");
-        System.out.println(" withdraw  - Withdraw money");
-        System.out.println(" transfer  - Transfer money");
-        System.out.println(" history   - View transactions");
-        System.out.println(" logout    - Logout");
+        System.out.println(" 1. balance   - Check account balance");
+        System.out.println(" 2. deposit   - Deposit money");
+        System.out.println(" 3. withdraw  - Withdraw money");
+        System.out.println(" 4. transfer  - Transfer money");
+        System.out.println(" 5. history   - View transactions");
+        System.out.println(" 6. logout    - Logout");
         System.out.println("----------------------------------------");
     }
 
@@ -210,6 +216,6 @@ public class BankRepl {
     }
 
     public void printSuccess(String message) { 
-        System.out.println(" ✓ " + message); 
+        System.out.println(" + " + message); 
     }
 }

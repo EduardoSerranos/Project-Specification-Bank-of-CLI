@@ -1,8 +1,0 @@
-Sep 24, 2026 9:34:07 AM com.bankofcli.Service.AccountServiceImpl login
-INFO: Account 1 logged in successfully.
-Sep 24, 2026 9:34:17 AM com.bankofcli.Service.AccountServiceImpl withdraw
-WARNING: Failed to withdraw from account 1
-Sep 24, 2026 10:03:13 AM com.bankofcli.Service.AccountServiceImpl login
-INFO: Account 1 logged in successfully.
-Sep 24, 2026 10:03:21 AM com.bankofcli.Service.AccountServiceImpl deposit
-INFO: Account 1deposited $1

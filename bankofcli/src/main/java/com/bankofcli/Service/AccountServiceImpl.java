@@ -101,7 +101,7 @@ public class AccountServiceImpl implements AccountService{
         Transaction transaction = new Transaction(accountId, "WITHDRAW", amount, null);
         transactionDAO.createTransaction(transaction);
 
-        logger.info(() -> "Account " + account.getAccountId() + "wtihdrew $" + amount);
+        logger.info(() -> "Account " + account.getAccountId() + " withdrew $" + amount);
     }
 
     @Override
