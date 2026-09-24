@@ -1,0 +1,4 @@
+Sep 24, 2026 11:43:04 AM com.bankofcli.Service.AccountServiceImpl login
+INFO: Account 1 logged in successfully.
+Sep 24, 2026 11:43:30 AM com.bankofcli.Service.AccountServiceImpl withdraw
+INFO: Account 1wtihdrew $1
